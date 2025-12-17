@@ -1,0 +1,6 @@
+{
+    "bosses":[
+        {"name":"Drago Nero","x":1200,"y":300,"w":200,"h":200,"hp":500},
+        {"name":"Cavaliere Oscuro","x":1500,"y":400,"w":150,"h":180,"hp":400}
+    ]
+}

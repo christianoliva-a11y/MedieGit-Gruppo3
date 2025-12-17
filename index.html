@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedieGit</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CANVAS -->
+    <canvas id="game"></canvas>
+
+    <!-- MENU -->
+    <div id="menu" class="overlay">
+        <h1 class="title">MEDIEGIT</h1>
+        <button id="playBtn">Gioca</button>
+        <button id="commandsBtn">Comandi</button>
+    </div>
+
+    <!-- COMMANDS -->
+    <div id="commands" class="overlay hidden">
+        <h2>COMANDI</h2>
+        <p>← / A = Muovi a sinistra</p>
+        <p>→ / D = Muovi a destra</p>
+        <p>W / ↑ / SPACE = Salta</p>
+        <p>J = Attacco leggero</p>
+        <p>K = Attacco pesante</p>
+        <p>Q = Cura/Stamina</p>
+        <p>Rotellina mouse = Cambia arma</p>
+        <p>ESC = Pausa / Menu</p>
+        <button id="backBtn">Indietro</button>
+    </div>
+
+   <!-- ENGINE / CORE -->
+<script src="engine/animations.js" defer></script>
+<script src="engine/assets.js" defer></script>
+<script src="engine/audio.js" defer></script>
+<script src="engine/camera.js" defer></script>
+<script src="engine/collisions.js" defer></script>
+<script src="engine/enemiesAI.js" defer></script>
+<script src="engine/input.js" defer></script>
+<script src="engine/items.js" defer></script>
+<script src="engine/physics.js" defer></script>
+<script src="engine/renderer.js" defer></script>
+<script src="engine/combat.js" defer></script>
+<script src="engine/levels.js" defer></script>
+
+
+<!-- HUD -->
+<script src="ui/hud.js" defer></script>
+
+<!-- MAIN GAME -->
+<script type="module" src="game.js"></script>
+
+<canvas id="game"></canvas>
+
+</body>
+</html>

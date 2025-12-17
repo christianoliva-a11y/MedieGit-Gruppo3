@@ -1,0 +1,18 @@
+HO CREATO LA DIRECTORY DEI FILE, SUCCESSIVAMENTE:
+
+HO APERTO IL PROMPT ALL'INTERNO DELLA CARTELLA MEDIEGIT.
+E HO EFFETTUATO I SEGUENTI COMANDI:
+
+git init
+
+git add .
+
+git commit -m "Inizializzazione progetto MedieGit"
+
+git branch -M main
+
+git remote add origin https://github.com/christianoliva-a11y/MedieGit.git
+
+git push -u origin main
+
+infine ho implementato il codice del gioco su github.
