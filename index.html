@@ -33,7 +33,7 @@
         <button id="backBtn">Indietro</button>
     </div>
 
-   <!-- ENGINE / CORE -->
+   <!-- ENGINE / CORE (caricati come script "normali", globali) -->
 <script src="engine/animations.js" defer></script>
 <script src="engine/assets.js" defer></script>
 <script src="engine/audio.js" defer></script>
@@ -47,14 +47,11 @@
 <script src="engine/combat.js" defer></script>
 <script src="engine/levels.js" defer></script>
 
-
 <!-- HUD -->
 <script src="ui/hud.js" defer></script>
 
-<!-- MAIN GAME -->
-<script type="module" src="game.js"></script>
-
-<canvas id="game"></canvas>
+<!-- MAIN GAME (non-module ora) -->
+<script src="game.js" defer></script>
 
 </body>
 </html>
