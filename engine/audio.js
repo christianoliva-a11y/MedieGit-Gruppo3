@@ -1,17 +1,37 @@
-const BASE_PATH = "../";
+// Imposta BASE_PATH globale (vuoto, perché index.html è nella root)
+window.BASE_PATH = window.BASE_PATH !== undefined ? window.BASE_PATH : "";
 
-const jump = new Audio(BASE_PATH + "audio/jump.wav");
-const attack = new Audio(BASE_PATH + "audio/attack.wav");
-const hit = new Audio(BASE_PATH + "audio/hit.wav");
-const boss = new Audio(BASE_PATH + "audio/boss.wav");
+// Minimal AudioManager
+window.AudioManager = {
+    sounds: {},
+    load(name, path) {
+        try {
+            const a = new Audio(window.BASE_PATH + path);
+            this.sounds[name] = a;
+            return a;
+        } catch (e) {
+            console.warn("Audio load failed", name, path, e);
+            return null;
+        }
+    },
+    get(name) {
+        return this.sounds[name];
+    },
+    play(name) {
+        const s = this.sounds[name];
+        if (s) { try { s.currentTime = 0; s.play(); } catch(e) { console.warn("Audio play failed", name, e); } }
+    }
+};
 
+// Carica suoni usati (nomi basici)
+window.bgm = window.AudioManager.load("bgm", "audio/boss.wav") || new Audio(window.BASE_PATH + "audio/boss.wav");
+if (window.bgm) { window.bgm.loop = true; window.bgm.volume = 0.4; }
 
-bgm.loop = true;
-bgm.volume = 0.4;
-hitSound.volume = 0.6;
-deathSound.volume = 0.7;
+window.jumpSound = window.AudioManager.load("jump", "audio/jump.wav");
+window.attackSound = window.AudioManager.load("attack", "audio/attack.wav");
+window.hitSound = window.AudioManager.load("hit", "audio/hit.wav");
+window.deathSound = window.AudioManager.load("death", "audio/death.wav");
 
-AudioManager.load("jump", "audio/jump.wav");
-AudioManager.load("attack", "audio/attack.wav");
-AudioManager.load("hit", "audio/hit.wav");
-AudioManager.load("boss", "audio/boss.wav");
+// Volumi (solo se esistono)
+if (window.hitSound) window.hitSound.volume = 0.6;
+if (window.deathSound) window.deathSound.volume = 0.7;
