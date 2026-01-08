@@ -1,26 +1,9 @@
 // =====================
-// IMPORT ENGINE
-// =====================
-import "./engine/audio.js";
-import "./engine/assets.js";
-import "./engine/input.js";
-import "./engine/camera.js";
-import "./engine/collisions.js";
-import "./engine/enemiesAI.js";
-import "./engine/combat.js";
-import "./engine/items.js";
-import "./engine/levels.js";
-import "./engine/physics.js";
-import "./engine/renderer.js";
-import "./engine/animations.js";
-
-// =====================
-// GLOBAL EXPORT (SERVE AGLI ENGINE)
-// =====================
-export let player;
-export let tiles = [];
-export let enemies = [];
-export let items = [];
+// GLOBAL EXPORT (SERVE AGLI ENGINE) -> reso globale (var)
+var player;
+var tiles = [];
+var enemies = [];
+var items = [];
 
 // =====================
 // DOM READY
@@ -69,8 +52,8 @@ let level1, level2, level3;
 async function init() {
     console.log("DOM pronto");
 
-    await preloadAssets();
-    await preloadLevels();
+    if (typeof preloadAssets === "function") await preloadAssets();
+    if (typeof preloadLevels === "function") await preloadLevels();
 
     player = {
         x: 100,
@@ -108,14 +91,15 @@ function setupMenu() {
 // START GAME
 // =====================
 async function startGame() {
-    bgm.currentTime = 0;
-    bgm.play();
+    if (window.bgm) {
+        try { window.bgm.currentTime = 0; window.bgm.play(); } catch(e) { console.warn("bgm play failed", e); }
+    }
 
     gameStarted = true;
     gamePaused = false;
     menuDiv.classList.add("hidden");
 
-    await loadLevel(currentLevel);
+    if (typeof loadLevel === "function") await loadLevel(currentLevel);
 
     if (!loopStarted) {
         loopStarted = true;
@@ -135,11 +119,16 @@ document.addEventListener("keydown", e => {
 
 // =====================
 // LEVEL LOADING
+// (se sono definite altrove, vengono usate)
 // =====================
 async function preloadLevels() {
-    level1 = await loadJSON("levels/level1.json");
-    level2 = await loadJSON("levels/level2.json");
-    level3 = await loadJSON("levels/level3.json");
+    if (typeof loadJSON === "function") {
+        level1 = await loadJSON("levels/level1.json");
+        level2 = await loadJSON("levels/level2.json");
+        level3 = await loadJSON("levels/level3.json");
+    } else {
+        level1 = level2 = level3 = { tiles: [], enemies: [] };
+    }
 }
 
 async function loadLevel(n) {
@@ -149,8 +138,8 @@ async function loadLevel(n) {
     if (n === 2) level = level2;
     if (n === 3) level = level3;
 
-    tiles = level.tiles;
-    enemies = level.enemies;
+    tiles = level.tiles || [];
+    enemies = level.enemies || [];
     items = [];
 
     player.x = 100;
@@ -161,11 +150,11 @@ async function loadLevel(n) {
 // WEAPON SWITCH
 // =====================
 function handleWeaponSwitch() {
-    if (window.Input && Input.scrollDelta !== 0) {
-        currentWeapon += Input.scrollDelta;
+    if (window.Input && window.Input.scrollDelta !== 0) {
+        currentWeapon += window.Input.scrollDelta;
         if (currentWeapon < 0) currentWeapon = weapons.length - 1;
         if (currentWeapon >= weapons.length) currentWeapon = 0;
-        Input.scrollDelta = 0;
+        window.Input.scrollDelta = 0;
     }
 }
 
@@ -176,23 +165,23 @@ function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (gameStarted && !gamePaused) {
-        applyPhysics(player, tiles);
-        handleCollisions(player, tiles);
+        if (typeof window.applyPhysics === "function") window.applyPhysics(player, tiles);
+        if (typeof window.handleCollisions === "function") window.handleCollisions(player, tiles);
 
-        handlePlayerAttack(player);
-        updateEnemiesAI(enemies, player);
-        updateInvincibility(enemies);
+        if (typeof window.handlePlayerAttack === "function") window.handlePlayerAttack(player);
+        if (typeof window.updateEnemiesAI === "function") window.updateEnemiesAI(enemies, player);
+        if (typeof window.updateInvincibility === "function") window.updateInvincibility(enemies);
 
-        collectItems(player, items);
+        if (typeof window.collectItems === "function") window.collectItems(player, items);
         handleWeaponSwitch();
 
-        animatePlayer(player);
-        animateEnemies(enemies);
+        if (typeof window.animatePlayer === "function") window.animatePlayer(player);
+        if (typeof window.animateEnemies === "function") window.animateEnemies(enemies);
 
         camX = player.x - canvas.width / 2;
 
-        renderScene(ctx, player, tiles, enemies, items, camX);
-        drawHUD(ctx, player);
+        if (typeof window.renderScene === "function") window.renderScene(ctx, player, tiles, enemies, items, camX);
+        if (typeof window.drawHUD === "function") window.drawHUD(ctx, player);
 
         checkPlayerDeath();
     }
@@ -206,7 +195,7 @@ function loop() {
 function checkPlayerDeath() {
     if (player.hp <= 0) {
         gamePaused = true;
-        menuDiv.querySelector("h1").innerText = "Game Over";
+        if (menuDiv.querySelector("h1")) menuDiv.querySelector("h1").innerText = "Game Over";
         menuDiv.classList.remove("hidden");
     }
 }
